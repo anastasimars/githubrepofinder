@@ -1,13 +1,10 @@
 package com.example.githubrepofinder.controller;
 
-import com.example.githubrepofinder.response.RepoFinderResponse;
-import com.example.githubrepofinder.service.GithubRepoFinderService;
+import com.example.githubrepofinder.model.ClientResponse;
+import com.example.githubrepofinder.service.GithubRepoFinderApi;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -17,12 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 class GitHubRepoFinderController {
 
-    private final GithubRepoFinderService service;
+    private final GithubRepoFinderApi service;
 
-    @GetMapping("/users/{username}/repos")
-    public Mono<ResponseEntity<List<RepoFinderResponse>>> getReposByUsername
+    @GetMapping(value = "/users/{username}/repos", produces = "application/json")
+    public Mono<ResponseEntity<List<ClientResponse>>> getReposByUsername
             (@PathVariable String username) {
-        return null;
-
+        return service.getAllRepos(username)
+                .map(ResponseEntity::ok);
     }
 }

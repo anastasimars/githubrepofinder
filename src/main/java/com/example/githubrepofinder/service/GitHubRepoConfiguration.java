@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 class GitHubRepoConfiguration {
     @Bean
-    GithubRepoFinderService githubRepoService(final WebClient.Builder webClientBuilder) {
-        return new GitHubRepoFinderServiceImpl(webClientBuilder);
+    GithubRepoFinderApi githubRepoService(final WebClient.Builder webClient) {
+        return new GitHubRepoFinderApiImpl(webClient);
     }
 }
