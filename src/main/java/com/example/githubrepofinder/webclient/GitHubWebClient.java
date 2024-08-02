@@ -46,9 +46,12 @@ public class GitHubWebClient {
 
     private Mono<List<BranchInfoResponse>> getAllBranchesForRepo(
             RepoFinderResponse response) {
+        String repositoryName = response.getName();
+        String username = response.getOwner().getLogin();
+
         return webClient
                 .get()
-                .uri(response.getBranchesUrl())
+                .uri("/repos/{username}/{repositoryName}/branches",  username, repositoryName)
                 .header(HttpHeaders.ACCEPT, "application/vnd.github+json")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()

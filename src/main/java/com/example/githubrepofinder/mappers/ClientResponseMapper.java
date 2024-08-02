@@ -10,7 +10,7 @@ public class ClientResponseMapper {
 
     public static RepositoryData mapToClientResponse(RepoFinderResponse repoFinderResponse,
                                                      List<BranchInfoResponse> branchInfoResponses){
-        return new RepositoryData(repoFinderResponse.getRepositoryName(),
-                repoFinderResponse.getOwnerLogin(), branchInfoResponses);
+        return new RepositoryData(repoFinderResponse.getName(),
+                repoFinderResponse.getOwner().getLogin(), branchInfoResponses);
     }
 }
