@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.List;
 @AllArgsConstructor
 @Getter
-public class ClientResponse {
+public class RepositoryData {
     private String name;
     private String owner;
     private List<BranchInfoResponse> branches;

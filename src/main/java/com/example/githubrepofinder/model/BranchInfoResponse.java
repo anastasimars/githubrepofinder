@@ -13,7 +13,7 @@ public class BranchInfoResponse {
     private String branchName;
     private String lastCommitSha;
     @JsonProperty("commit")
-    public void setLastCommitSha(Map<String, Object> commit) {
-        this.lastCommitSha = (String) commit.get("sha");
+    public void setLastCommitSha(Map<String, String> commitDetails) {
+        this.lastCommitSha = commitDetails.get("sha");
     }
 }

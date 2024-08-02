@@ -24,7 +24,7 @@ public class RepoFinderResponse {
     }
 
     @JsonProperty("owner")
-    public void setOwnerLogin(Map<String, Object> owner) {
-        this.ownerLogin = (String) owner.get("login");
+    public void setOwnerLogin(Map<String, String> ownerData) {
+        this.ownerLogin = ownerData.get("login");
     }
 }
