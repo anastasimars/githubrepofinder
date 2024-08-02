@@ -1,0 +1,18 @@
+[
+  {
+    "name": "main",
+    "commit": {
+      "sha": "34ddeb84334fec3ca562948850d4bfa79097005b",
+      "url": "https://api.github.com/repos/anastasimars/auth-service/commits/34ddeb84334fec3ca562948850d4bfa79097005b"
+    },
+    "protected": false
+  },
+  {
+    "name": "task-002-keycloak-integration",
+    "commit": {
+      "sha": "34ddeb84334fec3ca562948850d4bfa79097005b",
+      "url": "https://api.github.com/repos/anastasimars/auth-service/commits/34ddeb84334fec3ca562948850d4bfa79097005b"
+    },
+    "protected": false
+  }
+]
