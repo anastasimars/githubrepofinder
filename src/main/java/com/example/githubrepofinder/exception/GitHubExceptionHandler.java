@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class GitHubExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorMessageResponse> handleUsernameNotFoundException
-            (UsernameNotFoundException exception){
+    public ResponseEntity<ErrorMessageResponse> handleUsernameNotFoundException(UsernameNotFoundException exception){
         ErrorMessageResponse errorMessage = new ErrorMessageResponse(404, exception.getMessage());
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
     }

@@ -10,7 +10,7 @@ import java.util.*;
 
 @AllArgsConstructor
 @Getter
-public class    RepoFinderResponse {
+public class RepoFinderResponse {
     private String name;
 
     private Owner owner;

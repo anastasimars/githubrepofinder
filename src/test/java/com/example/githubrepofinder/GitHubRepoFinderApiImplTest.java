@@ -1,4 +1,4 @@
-package com.example.githubrepofinder.api;
+package com.example.githubrepofinder;
 
 import com.example.githubrepofinder.model.UserRepositoryResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;

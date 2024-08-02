@@ -2,8 +2,8 @@ package com.example.githubrepofinder.webclient;
 
 import com.example.githubrepofinder.exception.UsernameNotFoundException;
 import com.example.githubrepofinder.model.BranchInfoResponse;
-import com.example.githubrepofinder.model.RepositoryData;
 import com.example.githubrepofinder.model.RepoFinderResponse;
+import com.example.githubrepofinder.model.RepositoryData;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,13 +14,11 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static com.example.githubrepofinder.mappers.ClientResponseMapper.mapToClientResponse;
-
 @AllArgsConstructor
 public class GitHubWebClient {
     private final WebClient webClient;
 
-    public Mono<List<RepositoryData>> getAllUserRepos(String username) {
+    public Mono<List<RepositoryData>> getAllUserRepos(final String username) {
         return webClient
                 .get()
                 .uri("/users/{username}/repos", username)
@@ -40,14 +38,15 @@ public class GitHubWebClient {
 
                 .filter(repoFinderResponse -> !repoFinderResponse.isFork())
                 .flatMap(repoFinderResponse -> getAllBranchesForRepo(repoFinderResponse)
-                        .map(branchInfoResponses -> mapToClientResponse(repoFinderResponse, branchInfoResponses)))
+                        .map(branchInfoResponses -> new RepositoryData(repoFinderResponse.getName(),
+                                repoFinderResponse.getOwner().getLogin(), branchInfoResponses)))
                 .collectList();
     }
 
     private Mono<List<BranchInfoResponse>> getAllBranchesForRepo(
-            RepoFinderResponse response) {
-        String repositoryName = response.getName();
-        String username = response.getOwner().getLogin();
+            final RepoFinderResponse response) {
+        final String repositoryName = response.getName();
+        final String username = response.getOwner().getLogin();
 
         return webClient
                 .get()
