@@ -52,3 +52,6 @@ This will return a JSON response containing the repositories and their branches 
 
 # Error Handling
 404 Not Found: If the username does not exist, the API returns a UsernameNotFoundException.
+
+## Test
+The GitHubRepoFinder API includes integration test to ensure the application works as expected. This test use RestAssured and JUnit to validate the API endpoints. The test is located in the src/test/java directory.
