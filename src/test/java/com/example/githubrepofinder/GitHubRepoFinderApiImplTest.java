@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import wiremock.org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,7 +39,7 @@ class GitHubRepoFinderApiImplTest {
     }
 
     @Test
-    void happyPath_test() throws IOException {
+    void happyPath_fetchAllRepos_shouldReturn200StatusCode() throws IOException {
         // Given
         final String givenUsername = "anastasimars";
 
@@ -54,7 +53,7 @@ class GitHubRepoFinderApiImplTest {
 
         // Then
         // Line for debuging
-         FileUtils.writeStringToFile(new File("target/response.json"), response.getBody().asString(), "UTF-8");
+        // FileUtils.writeStringToFile(new File("target/response.json"), response.getBody().asString(), "UTF-8");
         UserRepositoryResponse responseBody = response.body().as(UserRepositoryResponse.class);
         Assertions.assertEquals(200, response.statusCode());
         Assertions.assertEquals(6, responseBody.getRepositoriesData().size());
