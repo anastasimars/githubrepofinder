@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import wiremock.org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,7 +38,7 @@ class GitHubRepoFinderApiImplTest {
     }
 
     @Test
-    void happyPath_test() throws IOException {
+    void happyPath_fetchAllRepos_shouldReturn200StatusCode() throws IOException {
         // Given
         final String givenUsername = "anastasimars";
 
@@ -52,9 +51,9 @@ class GitHubRepoFinderApiImplTest {
                 .andReturn();
 
         // Then
+        // Line for debuging
+        // FileUtils.writeStringToFile(new File("target/response.json"), response.getBody().asString(), "UTF-8");
         Assertions.assertEquals(200, response.statusCode());
-        FileUtils.writeStringToFile(new File("target/response.json"), response.getBody().asString(), "UTF-8");
-
     }
 
     private void startWireMockServer() {
@@ -67,20 +66,18 @@ class GitHubRepoFinderApiImplTest {
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
-                                        .withHeader("Accept", "application/vnd.github+json")
                                         .withHeader("Content-Type", "application/json; charset=utf-8")
-                                        .withBody(resource())
+                                        .withBody(resource("/API-TEST/mocks/mainResponse.json"))
                         )
         );
 
         wireMockServer.stubFor(
-                WireMock.get(WireMock.urlPathEqualTo("/repos/anastasimars/auth-service/branches*"))
+                WireMock.get(WireMock.urlPathMatching("/repos/anastasimars/.*"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
-                                        .withHeader("Accept", "application/vnd.github+json")
                                         .withHeader("Content-Type", "application/json; charset=utf-8")
-                                        .withBody(resource())
+                                        .withBody(resource("/API-TEST/mocks/branchResponse.json"))
                         )
         );
 
@@ -93,9 +90,9 @@ class GitHubRepoFinderApiImplTest {
         }
     }
 
-    private static String resource() {
+    private static String resource(String path) {
         try {
-            URL resourceURL = GitHubRepoFinderApiImplTest.class.getResource("/" + "API-TEST/mocks/mainResponse.json");
+            URL resourceURL = GitHubRepoFinderApiImplTest.class.getResource(path);
             File file = new File(Objects.requireNonNull(resourceURL).toURI());
             BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
             return reader.lines().reduce("", (acc, line) -> acc + line);
