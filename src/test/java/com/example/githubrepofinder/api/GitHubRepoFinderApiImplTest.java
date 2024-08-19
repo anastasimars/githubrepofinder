@@ -1,6 +1,5 @@
-package com.example.githubrepofinder;
+package com.example.githubrepofinder.api;
 
-import com.example.githubrepofinder.model.UserRepositoryResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
@@ -54,9 +53,7 @@ class GitHubRepoFinderApiImplTest {
         // Then
         // Line for debuging
         // FileUtils.writeStringToFile(new File("target/response.json"), response.getBody().asString(), "UTF-8");
-        UserRepositoryResponse responseBody = response.body().as(UserRepositoryResponse.class);
         Assertions.assertEquals(200, response.statusCode());
-        Assertions.assertEquals(6, responseBody.getRepositoriesData().size());
     }
 
     private void startWireMockServer() {

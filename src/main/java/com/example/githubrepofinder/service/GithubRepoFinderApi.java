@@ -1,7 +1,10 @@
 package com.example.githubrepofinder.service;
 
-import com.example.githubrepofinder.model.UserRepositoryResponse;
+import com.example.githubrepofinder.model.RepositoryData;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public interface GithubRepoFinderApi {
-   UserRepositoryResponse fetchAllRepos(String username);
+   Mono<List<RepositoryData>> fetchAllRepos(String username);
 }
