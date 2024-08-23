@@ -16,18 +16,18 @@ If you have completed the previous steps, you can start cloning the project to y
 $ git clone https://github.com/anastasimars/githubrepofinder.git
 ```
 
-5. Navigate to the directory where you’d like your cloned directory to appear. Use the cd command to change the directory:
+4. Navigate to the directory where you’d like your cloned directory to appear. Use the cd command to change the directory:
 
 ```sh
 $ cd '/c/Users/YOUR_USERNAME/My Project'
 ```
 
-7. Build with Maven: 
+5. Build with Maven: 
 
 ```sh
 mvn clean install
 ```
-8. Run the application: 
+6. Run the application: 
 ```sh
 mvn spring-boot:run
 ```
