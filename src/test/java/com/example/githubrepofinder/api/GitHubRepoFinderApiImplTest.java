@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.BufferedReader;
@@ -19,17 +20,19 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-test.properties")
 class GitHubRepoFinderApiImplTest {
 
+    @LocalServerPort
+    private String appPort;
 
     private WireMockServer wireMockServer;
 
     @BeforeEach
     void setUp() {
         startWireMockServer();
-        RestAssured.baseURI = "http://localhost:8081";
+        RestAssured.baseURI = "http://localhost:" + appPort;
     }
 
     @AfterEach
@@ -38,7 +41,7 @@ class GitHubRepoFinderApiImplTest {
     }
 
     @Test
-    void happyPath_fetchAllRepos_shouldReturn200StatusCode() throws IOException {
+    void happyPath_fetchAllRepos_shouldReturn200StatusCode(){
         // Given
         final String givenUsername = "anastasimars";
 
