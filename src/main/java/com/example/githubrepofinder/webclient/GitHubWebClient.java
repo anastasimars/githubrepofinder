@@ -5,6 +5,7 @@ import com.example.githubrepofinder.model.BranchInfoResponse;
 import com.example.githubrepofinder.model.RepoFinderResponse;
 import com.example.githubrepofinder.model.RepositoryData;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +19,7 @@ import java.util.List;
 public class GitHubWebClient {
     private final WebClient webClient;
 
+    @Cacheable(value = "repos", key = "#username")
     public Mono<List<RepositoryData>> getAllUserRepos(final String username) {
         return webClient
                 .get()
@@ -43,6 +45,7 @@ public class GitHubWebClient {
                 .collectList();
     }
 
+   @Cacheable(value = "branches", key = "{#responce.owner.login, #responce.name}")
     private Mono<List<BranchInfoResponse>> getAllBranchesForRepo(
             final RepoFinderResponse response) {
         final String repositoryName = response.getName();
@@ -50,7 +53,7 @@ public class GitHubWebClient {
 
         return webClient
                 .get()
-                .uri("/repos/{username}/{repositoryName}/branches",  username, repositoryName)
+                .uri("/repos/{username}/{repositoryName}/branches", username, repositoryName)
                 .header(HttpHeaders.ACCEPT, "application/vnd.github+json")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
