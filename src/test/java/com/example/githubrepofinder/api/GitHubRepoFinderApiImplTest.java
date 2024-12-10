@@ -1,7 +1,6 @@
 package com.example.githubrepofinder.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -13,12 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Objects;
+
+import static com.example.githubrepofinder.StubData.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -41,17 +37,20 @@ class GitHubRepoFinderApiImplTest {
     }
 
     @Test
-    void happyPath_fetchAllRepos_shouldReturn200StatusCode(){
+    void fetchAllRepos_whenUsernameIsExist_shouldReturn200StatusCode() {
         // Given
         final String givenUsername = "anastasimars";
+        final String givenMainResponse = "/API-TEST/mocks/mainResponse.json";
+        final String givenBranchResponse = "/API-TEST/mocks/branchResponse.json";
 
+        // creating stubs
+        createUserReposStub(wireMockServer, givenUsername, givenMainResponse);
+        createRepoDetailsStub(wireMockServer, givenUsername, givenBranchResponse);
 
         // When
         Response response = RestAssured.given()
                 .header("Content-Type", "application/json")
-                .when()
-                .get("/api/github/users/" + givenUsername + "/repos")
-                .andReturn();
+                .get("/api/github/users/" + givenUsername + "/repos");
 
         // Then
         // Line for debuging
@@ -59,31 +58,29 @@ class GitHubRepoFinderApiImplTest {
         Assertions.assertEquals(200, response.statusCode());
     }
 
+    @Test
+    void fetchAllRepos_whenUsernameIsNotExist_shouldReturn400StatusCode() throws IOException {
+        // Given
+        final String givenNonExistUsername = "anastasiaaamars";
+        final String givenNotFoundResponse = "/API-TEST/mocks/notFoundResponse.json";
+
+        // creating stubs
+        createNotFoundStub(wireMockServer, givenNonExistUsername, givenNotFoundResponse);
+
+        // When
+        Response response = RestAssured.given()
+                .header("Content-Type", "application/json")
+                .get("/api/github/users/" + givenNonExistUsername + "/repos");
+
+        // Then
+        // Line for debuging
+        // FileUtils.writeStringToFile(new File("target/response.json"), response.getBody().asString(), "UTF-8");
+        Assertions.assertEquals(404, response.statusCode());
+    }
+
     private void startWireMockServer() {
         WireMockConfiguration options = new WireMockConfiguration().port(8888);
         wireMockServer = new WireMockServer(options);
-
-
-        wireMockServer.stubFor(
-                WireMock.get(WireMock.urlPathEqualTo("/users/anastasimars/repos"))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "application/json; charset=utf-8")
-                                        .withBody(resource("/API-TEST/mocks/mainResponse.json"))
-                        )
-        );
-
-        wireMockServer.stubFor(
-                WireMock.get(WireMock.urlPathMatching("/repos/anastasimars/.*"))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "application/json; charset=utf-8")
-                                        .withBody(resource("/API-TEST/mocks/branchResponse.json"))
-                        )
-        );
-
         wireMockServer.start();
     }
 
@@ -93,14 +90,5 @@ class GitHubRepoFinderApiImplTest {
         }
     }
 
-    private static String resource(String path) {
-        try {
-            URL resourceURL = GitHubRepoFinderApiImplTest.class.getResource(path);
-            File file = new File(Objects.requireNonNull(resourceURL).toURI());
-            BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
-            return reader.lines().reduce("", (acc, line) -> acc + line);
-        } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 }
