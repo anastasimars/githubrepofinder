@@ -3,7 +3,7 @@ The GitHubRepoFinder API allows users to retrieve repository information from Gi
 
 ## Before Starting
 Before running the project, make sure you have installed on your system:
-- Java 21 
+- Java 22 
 - Maven 
 
 ## Setup
